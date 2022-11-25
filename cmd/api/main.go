@@ -1,6 +1,13 @@
 package main
 
-import "database/sql"
+import (
+	"database/sql"
+	"fmt"
+	"log"
+	"net/http"
+
+	"github.com/djfurman/go-micro-authentication-service/data"
+)
 
 const webPort = "80"
 
@@ -10,5 +17,20 @@ type Config struct {
 }
 
 func main() {
+	log.Println("Starting authentication service")
 
+	// ! todo connect to the DB
+
+	// setup config
+	app := Config{}
+
+	srv := &http.Server{
+		Addr:    fmt.Sprintf(":%s", webPort),
+		Handler: app.routes(),
+	}
+
+	err := srv.ListenAndServe()
+	if err != nil {
+		log.Panic(err)
+	}
 }
